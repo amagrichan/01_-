@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>脳汁ドバドバスロット</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+body {
+    background-color: #050505;
+    color: #fff;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color 0.1s;
+}
+
+/* 当たりの激しい画面振動 */
+.shake {
+    animation: shake-anim 0.08s infinite;
+}
+@keyframes shake-anim {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-8px, 8px) rotate(-2deg); }
+    50% { transform: translate(8px, -8px) rotate(2deg); }
+    75% { transform: translate(-8px, -8px) rotate(-1deg); }
+    100% { transform: translate(8px, 8px) rotate(1deg); }
+}
+
+/* スロット筐体 */
+.machine {
+    background: linear-gradient(135deg, #333, #111);
+    padding: 20px;
+    border-radius: 20px;
+    border: 5px solid #ffd700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 15px #000;
+    text-align: center;
+    width: 95%;
+    max-width: 400px;
+    position: relative;
+    z-index: 10;
+}
+
+/* リール部分 */
+.reels-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #000;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border: 4px solid #555;
+    box-shadow: inset 0 0 20px #000;
+}
+.reel {
+    width: 30%;
+    height: 100px;
+    background: linear-gradient(to bottom, #fff 0%, #eee 50%, #ccc 100%);
+    color: #000;
+    font-size: 3.8rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+/* ボタン関係 */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.btn-stop {
+    width: 30%;
+    padding: 18px 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: radial-gradient(circle, #ff4e50, #f9d423);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+    box-shadow: 0 6px 0 #990000, 0 8px 15px rgba(0,0,0,0.6);
+    transition: transform 0.05s;
+}
+.btn-stop:active {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 #990000;
+}
+.btn-stop:disabled {
+    background: #444;
+    color: #777;
+    box-shadow: none;
+}
+
+.btn-lever {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.6rem;
+    font-weight: 900;
+    background: linear-gradient(to bottom, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 6px 0 #004080, 0 10px 20px rgba(0,0,0,0.5);
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+.btn-lever:active {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 #004080;
+}
+
+/* ドーパミン全開オーバーレイ・レインボーフラッシュ */
+@keyframes rainbow-bg {
+    0% { background-color: #ff0000; }
+    20% { background-color: #ffff00; }
+    40% { background-color: #00ff00; }
+    60% { background-color: #00ffff; }
+    80% { background-color: #ff00ff; }
+    100% { background-color: #ff0000; }
+}
+.jackpot-active {
+    animation: rainbow-bg 0.15s infinite !important;
+}
+
+/* 脳汁ドバドバテキスト演出 */
+#jackpot-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+}
+.jackpot-active #jackpot-overlay {
+    display: flex;
+}
+
+.dopamine-text {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: #fff;
+    -webkit-text-stroke: 3px #ff0000;
+    text-shadow: 0 0 20px #ffff00, 0 0 40px #ff0000, 0 0 60px #ff0000;
+    animation: pop-boom 0.2s infinite alternate;
+    text-align: center;
+    line-height: 1.1;
+}
+
+@keyframes pop-boom {
+    0% { transform: scale(0.9) rotate(-3deg); }
+    100% { transform: scale(1.2) rotate(3deg); }
+}
+
+/* フリーズ用ブラックアウト */
+#freeze-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #000;
+    z-index: 999;
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<div id="freeze-overlay"></div>
+
+<div id="jackpot-overlay">
+    <div class="dopamine-text">脳汁ドバドバ！<br>超PLAY777!!</div>
+</div>
+
+<div class="machine" id="machine">
+    <div class="reels-container">
+        <div class="reel" id="reel0">７</div>
+        <div class="reel" id="reel1">７</div>
+        <div class="reel" id="reel2">７</div>
+    </div>
+    
+    <div class="controls">
+        <button class="btn-stop" id="stop0" disabled>左</button>
+        <button class="btn-stop" id="stop1" disabled>中</button>
+        <button class="btn-stop" id="stop2" disabled>右</button>
+    </div>
+    
+    <button class="btn-lever" id="lever">スタート！</button>
+</div>
+
+<script>
+const symbols = ['７', '🍉', '🔔', '🍒', 'BAR', '🍇'];
+// 7が揃いやすいように調整されたリール配列
+const weightedSymbols = ['７', '７', '７', '🍉', '🔔', '🍒', 'BAR', '🍇'];
+
+const reels = [document.getElementById('reel0'), document.getElementById('reel1'), document.getElementById('reel2')];
+const stopBtns = [document.getElementById('stop0'), document.getElementById('stop1'), document.getElementById('stop2')];
+const lever = document.getElementById('lever');
+const machine = document.getElementById('machine');
+const freezeOverlay = document.getElementById('freeze-overlay');
+
+let intervals = [null, null, null];
+let isSpinning = [false, false, false];
+let results = ['', '', ''];
+let stoppedCount = 0;
+let confettiInterval = null;
+
+// 音声再生（Web Audio API）
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    if (type === 'spin') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+    } else if (type === 'stop') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+    } else if (type === 'jackpot') {
+        // ファンファーレ風の大音量サイレン
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(1800, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.4);
+    } else if (type === 'freeze') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2.5);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 2.5);
+    }
+}
+
+// ドーパミン・キラキラ紙吹雪ドカン演出
+function fireConfetti() {
+    // 黄金・赤・虹色の紙吹雪を大量噴射
+    confetti({
+        particleCount: 100,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#ffd700', '#ff0000', '#ffffff', '#00ffff', '#ff00ff']
+    });
+}
+
+function startSpin() {
+    // 前回の当たり演出をリセット
+    document.body.classList.remove('jackpot-active');
+    document.body.classList.remove('shake');
+    if (confettiInterval) clearInterval(confettiInterval);
+    
+    stoppedCount = 0;
+    results = ['', '', ''];
+    
+    // 1/15の確率で超激熱フリーズ発動！
+    if (Math.random() < 0.067) {
+        triggerFreeze();
+        return;
+    }
+
+    lever.disabled = true;
+    
+    for (let i = 0; i < 3; i++) {
+        isSpinning[i] = true;
+        stopBtns[i].disabled = false;
+        intervals[i] = setInterval(() => {
+            reels[i].textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        }, 40);
+    }
+    playSound('spin');
+}
+
+function triggerFreeze() {
+    lever.disabled = true;
+    freezeOverlay.style.display = 'block';
+    playSound('freeze');
+    
+    // 2.5秒間の沈黙のあと「プチュン…」と強制大当り
+    setTimeout(() => {
+        freezeOverlay.style.display = 'none';
+        for(let i=0; i<3; i++) {
+            reels[i].textContent = '７';
+            results[i] = '７';
+        }
+        triggerWinEffects();
+        lever.disabled = false;
+    }, 2500);
+}
+
+function stopReel(index) {
+    if (!isSpinning[index]) return;
+    
+    clearInterval(intervals[index]);
+    isSpinning[index] = false;
+    stopBtns[index].disabled = true;
+    
+    let finalSymbol = weightedSymbols[Math.floor(Math.random() * weightedSymbols.length)];
+    
+    // テンパイ（2つ揃い）時のデレ演出（45%の確率で強制的に揃える）
+    if (stoppedCount === 2) {
+        let stoppedResults = results.filter(r => r !== '');
+        if (stoppedResults[0] === stoppedResults[1]) {
+            if (Math.random() < 0.45) {
+                 finalSymbol = stoppedResults[0];
+            }
+        }
+    }
+
+    reels[index].textContent = finalSymbol;
+    results[index] = finalSymbol;
+    playSound('stop');
+    
+    stoppedCount++;
+    if (stoppedCount === 3) {
+        lever.disabled = false;
+        checkWin();
+    }
+}
+
+function checkWin() {
+    // 3つ同じ柄が揃った場合
+    if (results[0] === results[1] && results[1] === results[2]) {
+        triggerWinEffects();
+    }
+}
+
+function triggerWinEffects() {
+    // 1. 画面フラッシュ＆激しい画面振動
+    document.body.classList.add('jackpot-active');
+    document.body.classList.add('shake');
+    
+    // 2. 紙吹雪ドカン（連発）
+    fireConfetti();
+    confettiInterval = setInterval(() => {
+        fireConfetti();
+        playSound('jackpot');
+    }, 300);
+
+    // 3秒後に振動だけ少し落ち着かせる
+    setTimeout(() => {
+        document.body.classList.remove('shake');
+    }, 3000);
+}
+
+// iPhoneのブラウザ音声ブロック解除用のイベント
+document.body.addEventListener('touchstart', () => {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+}, { once: true });
+
+lever.addEventListener('click', startSpin);
+stopBtns.forEach((btn, i) => {
+    btn.addEventListener('click', () => stopReel(i));
+});
+</script>
+</body>
+</html>
