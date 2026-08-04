@@ -3,43 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>脳汁ドバドバスロット</title>
-<!-- 紙吹雪ライブラリの読み込み -->
+<title>神龍覚醒 - DRAGON SLOT</title>
+<!-- 紙吹雪ライブラリ -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
 body {
-    background-color: #050505;
+    background: #020202;
     color: #fff;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     overflow: hidden;
-    transition: background-color 0.1s;
 }
 
-/* 当たりの激しい画面振動 */
+/* 画面の激しい振動 */
 .shake {
-    animation: shake-anim 0.08s infinite;
+    animation: shake-anim 0.05s infinite alternate;
 }
 @keyframes shake-anim {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(-8px, 8px) rotate(-2deg); }
-    50% { transform: translate(8px, -8px) rotate(2deg); }
-    75% { transform: translate(-8px, -8px) rotate(-1deg); }
-    100% { transform: translate(8px, 8px) rotate(1deg); }
+    0% { transform: translate(-10px, 10px) rotate(-1deg); }
+    100% { transform: translate(10px, -10px) rotate(1deg); }
 }
 
-/* スロット筐体 */
-.machine {
-    background: linear-gradient(135deg, #333, #111);
-    padding: 20px;
-    border-radius: 20px;
-    border: 5px solid #ffd700;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4), inset 0 0 15px #000;
+/* 高級テカテカ質感の神龍筐体 */
+.dragon-machine {
+    background: linear-gradient(145deg, #151518 0%, #08080a 50%, #1a1a20 100%);
+    padding: 25px 20px;
+    border-radius: 25px;
+    border: 4px solid;
+    border-image: linear-gradient(to bottom, #ffe066, #d4af37, #8a6d3b, #ffe066) 1;
+    box-shadow: 
+        0 0 30px rgba(212, 175, 55, 0.3),
+        inset 0 0 15px rgba(255, 255, 255, 0.1),
+        inset 0 0 30px rgba(0, 0, 0, 0.9);
     text-align: center;
     width: 95%;
     max-width: 400px;
@@ -47,101 +47,132 @@ body {
     z-index: 10;
 }
 
-/* リール部分 */
+/* 筐体上部：龍の眼（ドラゴンアイ） */
+.dragon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+.dragon-eye {
+    width: 25px;
+    height: 12px;
+    background: #222;
+    border: 2px solid #d4af37;
+    border-radius: 50% 0 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 0 5px #000;
+    transition: all 0.2s;
+}
+.dragon-eye.right {
+    transform: rotate(45deg);
+    border-radius: 0 50% 0 50%;
+}
+.eye-active {
+    background: #ff0033 !important;
+    box-shadow: 0 0 15px #ff0033, 0 0 25px #ff0000 !important;
+}
+
+.machine-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(to bottom, #ffffff, #d4af37, #8a6d3b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* リール部分（重厚感溢れるメタリック枠） */
 .reels-container {
     display: flex;
     justify-content: space-between;
-    background-color: #000;
+    background: #000;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 15px;
     margin-bottom: 20px;
-    border: 4px solid #555;
-    box-shadow: inset 0 0 20px #000;
+    border: 3px solid #333;
+    box-shadow: inset 0 0 25px rgba(0,0,0,1), 0 0 15px rgba(212, 175, 55, 0.2);
 }
 .reel {
     width: 30%;
     height: 100px;
-    background: linear-gradient(to bottom, #fff 0%, #eee 50%, #ccc 100%);
+    background: linear-gradient(to bottom, #ffffff 0%, #dcdcdc 50%, #aaaaaa 100%);
     color: #000;
     font-size: 3.8rem;
     font-weight: 900;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    box-shadow: inset 0 5px 10px rgba(0,0,0,0.6);
-    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: inset 0 8px 15px rgba(0,0,0,0.8), inset 0 -8px 15px rgba(0,0,0,0.8);
+    border: 1px solid #fff;
 }
 
-/* ボタン関係 */
+/* 立体テカテカボタン */
 .controls {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 .btn-stop {
     width: 30%;
-    padding: 18px 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-    background: radial-gradient(circle, #ff4e50, #f9d423);
-    border: none;
+    padding: 16px 0;
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: linear-gradient(145deg, #222, #444);
+    border: 2px solid #d4af37;
     border-radius: 50%;
-    color: #fff;
-    text-shadow: 1px 1px 3px #000;
-    box-shadow: 0 6px 0 #990000, 0 8px 15px rgba(0,0,0,0.6);
-    transition: transform 0.05s;
+    color: #d4af37;
+    text-shadow: 0 0 5px #000;
+    box-shadow: 0 6px 0 #111, 0 8px 15px rgba(0,0,0,0.8), inset 0 2px 5px rgba(255,255,255,0.4);
+    transition: all 0.05s;
 }
 .btn-stop:active {
     transform: translateY(6px);
-    box-shadow: 0 0 0 #990000;
+    box-shadow: 0 0 0 #111, inset 0 2px 5px rgba(0,0,0,0.8);
 }
 .btn-stop:disabled {
-    background: #444;
-    color: #777;
+    background: #111;
+    color: #444;
+    border-color: #333;
     box-shadow: none;
 }
 
+/* 龍神レバー */
 .btn-lever {
     width: 100%;
-    padding: 20px;
+    padding: 18px;
     font-size: 1.6rem;
     font-weight: 900;
-    background: linear-gradient(to bottom, #00c6ff, #0072ff);
-    border: none;
-    border-radius: 12px;
+    background: linear-gradient(180deg, #b8860b 0%, #ff2a00 50%, #8b0000 100%);
+    border: 2px solid #ffe066;
+    border-radius: 15px;
     color: #fff;
-    box-shadow: 0 6px 0 #004080, 0 10px 20px rgba(0,0,0,0.5);
-    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    box-shadow: 0 6px 0 #500, 0 10px 20px rgba(255, 0, 0, 0.4), inset 0 2px 8px rgba(255,255,255,0.6);
+    text-shadow: 0 2px 4px #000;
+    letter-spacing: 2px;
 }
 .btn-lever:active {
     transform: translateY(6px);
-    box-shadow: 0 0 0 #004080;
+    box-shadow: 0 0 0 #500;
 }
 
-/* レインボーフラッシュアニメーション */
-@keyframes rainbow-bg {
-    0% { background-color: #ff0000; }
-    20% { background-color: #ffff00; }
-    40% { background-color: #00ff00; }
-    60% { background-color: #00ffff; }
-    80% { background-color: #ff00ff; }
-    100% { background-color: #ff0000; }
+/* 龍神覚醒・光線オーラ */
+@keyframes dragon-aura {
+    0% { background-color: #000; }
+    20% { background-color: #330000; }
+    40% { background-color: #331a00; }
+    60% { background-color: #00331a; }
+    80% { background-color: #1a0033; }
+    100% { background-color: #000; }
 }
-
-@keyframes rainbow-border {
-    0% { border-color: #ffffff; box-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000; }
-    25% { border-color: #ffff00; box-shadow: 0 0 30px #ffff00, 0 0 60px #ffff00; }
-    50% { border-color: #00ff00; box-shadow: 0 0 30px #00ff00, 0 0 60px #00ff00; }
-    75% { border-color: #00ffff; box-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff; }
-    100% { border-color: #ffffff; box-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000; }
-}
-
 .jackpot-active {
-    animation: rainbow-bg 0.15s infinite !important;
+    animation: dragon-aura 0.2s infinite !important;
 }
 
-/* 脳汁オーバーレイ */
+/* 覚醒ポップアップ */
 #jackpot-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -150,69 +181,93 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 100;
-    background: rgba(0,0,0,0.65);
+    background: rgba(0,0,0,0.85);
 }
 .jackpot-active #jackpot-overlay {
     display: flex;
 }
 
-.dopamine-text {
-    font-size: 4rem;
+.dragon-text {
+    font-size: 3.8rem;
     font-weight: 900;
-    color: #fff;
-    -webkit-text-stroke: 3px #ff0000;
-    text-shadow: 0 0 20px #ffff00, 0 0 40px #ff0000;
-    animation: pop-boom 0.2s infinite alternate;
+    background: linear-gradient(to bottom, #ffffff, #ffe066, #ff0000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pop-dragon 0.15s infinite alternate;
     text-align: center;
     line-height: 1.1;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
+    filter: drop-shadow(0 0 25px #ff0000);
+}
+@keyframes pop-dragon {
+    0% { transform: scale(0.95) rotate(-2deg); }
+    100% { transform: scale(1.15) rotate(2deg); }
 }
 
-@keyframes pop-boom {
-    0% { transform: scale(0.9) rotate(-3deg); }
-    100% { transform: scale(1.2) rotate(3deg); }
-}
-
-/* 演出連動・ド派手光るリセットボタン */
+/* リセットボタン（龍神発光） */
 .btn-reset {
     padding: 18px 45px;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 900;
     color: #fff;
+    background: linear-gradient(180deg, #ff0055, #ffcc00);
     border-radius: 50px;
-    border: 5px solid #fff;
+    border: 4px solid #fff;
     cursor: pointer;
-    text-shadow: 0 0 10px #000, 0 2px 4px #000;
-    /* 背景色とグラデーションも演出に連動して激しく変化 */
-    animation: rainbow-bg 0.15s infinite, rainbow-border 0.3s infinite, pulse 0.8s infinite alternate;
+    box-shadow: 0 0 30px #ff0000, 0 0 60px #ffcc00;
+    animation: pulse-reset 0.6s infinite alternate;
 }
-
-@keyframes pulse {
+@keyframes pulse-reset {
     0% { transform: scale(1); }
-    100% { transform: scale(1.12); }
+    100% { transform: scale(1.1); }
 }
 
-/* フリーズ用ブラックアウト */
+/* 漆黒フリーズ（神龍降臨） */
 #freeze-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     background-color: #000;
     z-index: 999;
     display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.freeze-title {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #d4af37;
+    letter-spacing: 10px;
+    text-shadow: 0 0 30px #d4af37, 0 0 60px #ff0000;
+    animation: freeze-text-anim 0.1s infinite alternate;
+}
+@keyframes freeze-text-anim {
+    0% { opacity: 0.8; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1.02); }
 }
 </style>
 </head>
 <body>
 
-<div id="freeze-overlay"></div>
-
-<!-- 大当たりポップアップ ＆ 演出連動発光ボタン -->
-<div id="jackpot-overlay">
-    <div class="dopamine-text">脳汁ドバドバ！<br>超PLAY777!!</div>
-    <button class="btn-reset" id="reset-btn">もう一度回す！</button>
+<!-- 神龍降臨フリーズ画面 -->
+<div id="freeze-overlay">
+    <div class="freeze-title">神龍降臨</div>
 </div>
 
-<div class="machine" id="machine">
+<!-- 大当たりポップアップ -->
+<div id="jackpot-overlay">
+    <div class="dragon-text">超神龍覚醒<br>777</div>
+    <button class="btn-reset" id="reset-btn">龍神召喚（再始動）</button>
+</div>
+
+<!-- スロット本体 -->
+<div class="dragon-machine" id="machine">
+    <div class="dragon-header">
+        <div class="dragon-eye" id="eye-left"></div>
+        <div class="machine-title">🐉 神 龍 覚 醒 🐉</div>
+        <div class="dragon-eye right" id="eye-right"></div>
+    </div>
+
     <div class="reels-container">
         <div class="reel" id="reel0">７</div>
         <div class="reel" id="reel1">７</div>
@@ -220,23 +275,25 @@ body {
     </div>
     
     <div class="controls">
-        <button class="btn-stop" id="stop0" disabled>左</button>
-        <button class="btn-stop" id="stop1" disabled>中</button>
-        <button class="btn-stop" id="stop2" disabled>右</button>
+        <button class="btn-stop" id="stop0" disabled>壱</button>
+        <button class="btn-stop" id="stop1" disabled>弐</button>
+        <button class="btn-stop" id="stop2" disabled>参</button>
     </div>
     
-    <button class="btn-lever" id="lever">スタート！</button>
+    <button class="btn-lever" id="lever">レバーON（竜撃）</button>
 </div>
 
 <script>
-const symbols = ['７', '🍉', '🔔', '🍒', 'BAR', '🍇'];
-const weightedSymbols = ['７', '７', '７', '🍉', '🔔', '🍒', 'BAR', '🍇'];
+const symbols = ['７', '🐉', '🔮', '⚔️', 'BAR', '🔥'];
+const weightedSymbols = ['７', '７', '７', '🐉', '🔮', '⚔️', 'BAR', '🔥'];
 
 const reels = [document.getElementById('reel0'), document.getElementById('reel1'), document.getElementById('reel2')];
 const stopBtns = [document.getElementById('stop0'), document.getElementById('stop1'), document.getElementById('stop2')];
 const lever = document.getElementById('lever');
 const resetBtn = document.getElementById('reset-btn');
 const freezeOverlay = document.getElementById('freeze-overlay');
+const eyeLeft = document.getElementById('eye-left');
+const eyeRight = document.getElementById('eye-right');
 
 let intervals = [null, null, null];
 let isSpinning = [false, false, false];
@@ -246,7 +303,8 @@ let confettiInterval = null;
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-function playSound(type) {
+// 龍の咆哮サウンド合成
+function playDragonSound(type) {
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
@@ -254,47 +312,61 @@ function playSound(type) {
     gain.connect(audioCtx.destination);
     
     if (type === 'spin') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.08);
     } else if (type === 'stop') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.08);
+        osc.stop(audioCtx.currentTime + 0.1);
     } else if (type === 'jackpot') {
+        // 咆哮ビーム音
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(1800, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.4);
-    } else if (type === 'freeze') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
         gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.5);
+    } else if (type === 'freeze') {
+        // 重低音の咆哮
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(60, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 1.5);
+        gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
         gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2.5);
         osc.start();
         osc.stop(audioCtx.currentTime + 2.5);
     }
 }
 
-function fireConfetti() {
+function setDragonEyes(active) {
+    if (active) {
+        eyeLeft.classList.add('eye-active');
+        eyeRight.classList.add('eye-active');
+    } else {
+        eyeLeft.classList.remove('eye-active');
+        eyeRight.classList.remove('eye-active');
+    }
+}
+
+function fireDragonConfetti() {
     confetti({
-        particleCount: 100,
-        spread: 100,
+        particleCount: 120,
+        spread: 120,
         origin: { y: 0.6 },
-        colors: ['#ffd700', '#ff0000', '#ffffff', '#00ffff', '#ff00ff']
+        colors: ['#ffe066', '#ff0000', '#ffffff', '#ffcc00', '#ff0055']
     });
 }
 
 function resetGame() {
     document.body.classList.remove('jackpot-active');
     document.body.classList.remove('shake');
+    setDragonEyes(false);
     if (confettiInterval) {
         clearInterval(confettiInterval);
         confettiInterval = null;
@@ -307,6 +379,10 @@ function startSpin() {
     stoppedCount = 0;
     results = ['', '', ''];
     
+    // 龍の眼を怪しく点灯
+    setDragonEyes(true);
+    
+    // 1/15で超激熱フリーズ（神龍降臨）
     if (Math.random() < 0.067) {
         triggerFreeze();
         return;
@@ -321,13 +397,13 @@ function startSpin() {
             reels[i].textContent = symbols[Math.floor(Math.random() * symbols.length)];
         }, 40);
     }
-    playSound('spin');
+    playDragonSound('spin');
 }
 
 function triggerFreeze() {
     lever.disabled = true;
-    freezeOverlay.style.display = 'block';
-    playSound('freeze');
+    freezeOverlay.style.display = 'flex';
+    playDragonSound('freeze');
     
     setTimeout(() => {
         freezeOverlay.style.display = 'none';
@@ -336,7 +412,7 @@ function triggerFreeze() {
             results[i] = '７';
         }
         triggerWinEffects();
-    }, 2500);
+    }, 2800);
 }
 
 function stopReel(index) {
@@ -348,6 +424,7 @@ function stopReel(index) {
     
     let finalSymbol = weightedSymbols[Math.floor(Math.random() * weightedSymbols.length)];
     
+    // リーチ（2つ揃い）時に45%の確率で強制当たり
     if (stoppedCount === 2) {
         let stoppedResults = results.filter(r => r !== '');
         if (stoppedResults[0] === stoppedResults[1]) {
@@ -359,7 +436,7 @@ function stopReel(index) {
 
     reels[index].textContent = finalSymbol;
     results[index] = finalSymbol;
-    playSound('stop');
+    playDragonSound('stop');
     
     stoppedCount++;
     if (stoppedCount === 3) {
@@ -371,6 +448,7 @@ function checkWin() {
     if (results[0] === results[1] && results[1] === results[2]) {
         triggerWinEffects();
     } else {
+        setDragonEyes(false);
         lever.disabled = false;
     }
 }
@@ -378,11 +456,12 @@ function checkWin() {
 function triggerWinEffects() {
     document.body.classList.add('jackpot-active');
     document.body.classList.add('shake');
+    setDragonEyes(true);
     
-    fireConfetti();
+    fireDragonConfetti();
     confettiInterval = setInterval(() => {
-        fireConfetti();
-        playSound('jackpot');
+        fireDragonConfetti();
+        playDragonSound('jackpot');
     }, 300);
 
     setTimeout(() => {
@@ -390,7 +469,7 @@ function triggerWinEffects() {
     }, 3000);
 }
 
-// イベント設定
+// iPhone音声ブロック解除
 document.body.addEventListener('touchstart', () => {
     if (audioCtx.state === 'suspended') audioCtx.resume();
 }, { once: true });
